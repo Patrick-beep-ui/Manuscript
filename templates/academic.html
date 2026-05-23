@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Page setup ─────────────────────────────────────────── */
+    @page {
+      size: A4;
+      margin: 25mm 22mm 28mm 22mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Source Sans 3', sans-serif;
+        font-size: 9pt;
+        color: #94a3b8;
+      }
+      @bottom-center {
+        content: "{{institution}}";
+        font-family: 'Source Sans 3', sans-serif;
+        font-size: 8pt;
+        color: #cbd5e1;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+    }
+
+    @page cover {
+      margin: 0;
+      @bottom-right { content: none; }
+      @bottom-center { content: none; }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 11pt;
+      line-height: 1.75;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Cover page ─────────────────────────────────────────── */
+    .cover {
+      page: cover;
+      width: 210mm;
+      height: 297mm;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #ffffff;
+      page-break-after: always;
+      overflow: hidden;
+    }
+
+    .cover-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8mm;
+      height: 100%;
+      background: linear-gradient(180deg, #1e3a5f 0%, #2563eb 60%, #93c5fd 100%);
+    }
+
+    .cover-top-bar {
+      background: #0f172a;
+      padding: 12mm 18mm 10mm 22mm;
+    }
+
+    .cover-institution {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 8.5pt;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #93c5fd;
+      margin: 0 0 4px 0;
+    }
+
+    .cover-program {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 10pt;
+      font-weight: 300;
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .cover-body {
+      flex: 1;
+      padding: 18mm 18mm 0 22mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .cover-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 8pt;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #2563eb;
+      margin: 0 0 10px 0;
+    }
+
+    .cover-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28pt;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #0f172a;
+      margin: 0 0 12px 0;
+      max-width: 155mm;
+    }
+
+    .cover-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: 14pt;
+      font-weight: 400;
+      font-style: italic;
+      color: #475569;
+      margin: 0 0 24px 0;
+      max-width: 150mm;
+    }
+
+    .cover-divider {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #93c5fd);
+      border: none;
+      margin: 0 0 28px 0;
+      border-radius: 2px;
+    }
+
+    .cover-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cover-meta-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .cover-meta-label {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 7.5pt;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      min-width: 60px;
+    }
+
+    .cover-meta-value {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 10.5pt;
+      font-weight: 400;
+      color: #334155;
+    }
+
+    .cover-bottom {
+      padding: 10mm 18mm 14mm 22mm;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .cover-date {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 9pt;
+      color: #94a3b8;
+    }
+
+    .cover-course {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 9pt;
+      color: #94a3b8;
+      text-align: right;
+    }
+
+    /* ─── Document header (after cover) ─────────────────────── */
+    .doc-header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 14px;
+      margin-bottom: 30px;
+    }
+
+    .doc-header-label {
+      font-size: 7.5pt;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #2563eb;
+      margin: 0 0 5px 0;
+    }
+
+    .doc-header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20pt;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.25;
+      margin: 0 0 4px 0;
+    }
+
+    .doc-header-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: 12pt;
+      font-style: italic;
+      color: #64748b;
+      margin: 0 0 10px 0;
+    }
+
+    .doc-header-meta {
+      font-size: 9pt;
+      color: #94a3b8;
+    }
+
+    /* ─── Sections ───────────────────────────────────────────── */
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 15pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 36px 0 14px 0;
+      padding-bottom: 6px;
+      border-bottom: 1.5px solid #e2e8f0;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 11pt;
+      font-weight: 600;
+      color: #1e40af;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 24px 0 10px 0;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin: 0 0 14px 0;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    ul, ol {
+      margin: 0 0 14px 0;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 7px;
+      text-align: justify;
+    }
+
+    strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    em {
+      font-style: italic;
+      color: #475569;
+    }
+
+    /* ─── Quote / highlight box ──────────────────────────────── */
+    .quote-box {
+      background: #f8fafc;
+      border-left: 4px solid #2563eb;
+      border-radius: 0 6px 6px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      page-break-inside: avoid;
+    }
+
+    .quote-box p {
+      margin: 0;
+      font-style: italic;
+      color: #334155;
+    }
+
+    .quote-box .quote-author {
+      margin-top: 8px;
+      font-size: 9pt;
+      font-style: normal;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.04em;
+    }
+
+    .highlight-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 20px 0;
+      page-break-inside: avoid;
+    }
+
+    .highlight-box .highlight-label {
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #1d4ed8;
+      margin: 0 0 6px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      color: #1e3a8a;
+    }
+
+    /* ─── Tables ─────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0 24px 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+
+    thead th {
+      background: #0f172a;
+      color: #f1f5f9;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 8.5pt;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 9px 12px;
+      text-align: left;
+    }
+
+    tbody td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 2px solid #0f172a;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* ─── References ─────────────────────────────────────────── */
+    .references {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 2px solid #0f172a;
+      page-break-before: auto;
+    }
+
+    .references h2 {
+      border-bottom: none;
+      margin-top: 0;
+      font-size: 13pt;
+    }
+
+    .reference-entry {
+      padding-left: 28px;
+      text-indent: -28px;
+      margin-bottom: 10px;
+      font-size: 9.5pt;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    .reference-entry a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    /* ─── Section number badge ───────────────────────────────── */
+    .section-number {
+      display: inline-block;
+      background: #0f172a;
+      color: #f1f5f9;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 7.5pt;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-right: 8px;
+      vertical-align: middle;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ COVER PAGE ══════════════════════════════════════════ -->
+  <div class="cover">
+    <div class="cover-accent"></div>
+
+    <div class="cover-top-bar">
+      <div class="cover-institution">{{institution}}</div>
+      <div class="cover-program">{{program}}</div>
+    </div>
+
+    <div class="cover-body">
+      <div class="cover-label">{{documentType}}</div>
+      <h1 class="cover-title">{{title}}</h1>
+      {{#if subtitle}}<div class="cover-subtitle">{{subtitle}}</div>{{/if}}
+      <hr class="cover-divider">
+      <div class="cover-meta">
+        {{#if author}}
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Autor</span>
+          <span class="cover-meta-value">{{author}}</span>
+        </div>
+        {{/if}}
+        {{#if professor}}
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Profesor</span>
+          <span class="cover-meta-value">{{professor}}</span>
+        </div>
+        {{/if}}
+        {{#if course}}
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Curso</span>
+          <span class="cover-meta-value">{{course}}</span>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="cover-bottom">
+      <div class="cover-date">{{date}}</div>
+      {{#if course}}<div class="cover-course">{{course}}</div>{{/if}}
+    </div>
+  </div>
+
+  <!-- ══ DOCUMENT BODY ════════════════════════════════════════ -->
+  <div class="doc-header">
+    <div class="doc-header-label">{{documentType}}</div>
+    <div class="doc-header-title">{{title}}</div>
+    {{#if subtitle}}<div class="doc-header-subtitle">{{subtitle}}</div>{{/if}}
+    <div class="doc-header-meta">{{author}}{{#if course}} · {{course}}{{/if}} · {{date}}</div>
+  </div>
+
+  {{#each sections}}
+  <div class="section">
+    <h2>
+      <span class="section-number">{{addOne @index}}</span>
+      {{title}}
+    </h2>
+    <div class="section-content">{{{content}}}</div>
+  </div>
+  {{/each}}
+
+  {{#if references}}
+  <div class="references">
+    <h2>Referencias Bibliográficas</h2>
+    {{#each references}}
+    <div class="reference-entry">{{this}}</div>
+    {{/each}}
+  </div>
+  {{/if}}
+
+</body>
+</html>
