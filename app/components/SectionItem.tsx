@@ -1,24 +1,36 @@
 import type { Section } from "../types/document";
+import type { ContentBlock } from "../types/blocks";
+import { BlockEditor } from "./editor/BlockEditor";
 
 interface SectionItemProps {
   section: Section;
   index: number;
   totalCount: number;
-  onUpdate: (id: string, field: "title" | "content", value: string) => void;
+  onTitleChange: (id: string, title: string) => void;
+  onBlocksChange: (id: string, blocks: ContentBlock[]) => void;
   onRemove: (id: string) => void;
   onMove: (id: string, dir: -1 | 1) => void;
 }
 
-export function SectionItem({ section, index, totalCount, onUpdate, onRemove, onMove }: SectionItemProps) {
+export function SectionItem({
+  section,
+  index,
+  totalCount,
+  onTitleChange,
+  onBlocksChange,
+  onRemove,
+  onMove,
+}: SectionItemProps) {
   return (
-    <div className="p-5">
-      <div className="flex items-center gap-2 mb-3">
+    <div>
+      {/* Section header */}
+      <div className="flex items-center gap-2 px-5 py-3 border-b border-slate-100">
         <span className="w-5 h-5 rounded bg-slate-800 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
           {index + 1}
         </span>
         <input
           value={section.title}
-          onChange={(e) => onUpdate(section.id, "title", e.target.value)}
+          onChange={(e) => onTitleChange(section.id, e.target.value)}
           placeholder="Título de la sección…"
           className="flex-1 text-sm font-semibold text-slate-800 border-0 outline-none bg-transparent placeholder:text-slate-400 placeholder:font-normal"
         />
@@ -46,7 +58,7 @@ export function SectionItem({ section, index, totalCount, onUpdate, onRemove, on
           {totalCount > 1 && (
             <button
               onClick={() => onRemove(section.id)}
-              title="Eliminar"
+              title="Eliminar sección"
               className="p-1 text-slate-400 hover:text-red-500 transition-colors ml-1"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -56,12 +68,11 @@ export function SectionItem({ section, index, totalCount, onUpdate, onRemove, on
           )}
         </div>
       </div>
-      <textarea
-        value={section.content}
-        onChange={(e) => onUpdate(section.id, "content", e.target.value)}
-        placeholder="Contenido de la sección. Puedes usar HTML básico: <p>, <strong>, <em>, <ul><li>…</li></ul>, <table>, etc."
-        rows={6}
-        className="w-full text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100 resize-y placeholder:text-slate-400 font-mono leading-relaxed"
+
+      {/* Block editor */}
+      <BlockEditor
+        blocks={section.blocks}
+        onChange={(blocks) => onBlocksChange(section.id, blocks)}
       />
     </div>
   );

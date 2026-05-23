@@ -2,45 +2,55 @@
 
 import { useState } from "react";
 import type { Section, Template } from "./types/document";
+import type { ContentBlock } from "./types/blocks";
 import type { Reference } from "./types/reference";
 import { uid } from "./lib/uid";
-import { renderAPA } from "./lib/renderers/renderAPA";
-import { DocumentInfo } from "./components/DocumentInfo";
+import { renderBlock } from "./lib/renderers/renderBlock";
+import { renderAPA }   from "./lib/renderers/renderAPA";
+import { DocumentInfo }  from "./components/DocumentInfo";
 import { CourseDetails } from "./components/CourseDetails";
 import { SectionsEditor } from "./components/SectionsEditor";
-import { References } from "./components/references/References";
-import { Spinner } from "./components/shared/Spinner";
+import { References }    from "./components/references/References";
+import { Spinner }       from "./components/shared/Spinner";
+
+function defaultSection(): Section {
+  return { id: uid(), title: "", blocks: [{ id: uid(), type: "paragraph", text: "" }] };
+}
 
 export default function Home() {
-  const [title, setTitle] = useState("");
-  const [subtitle, setSubtitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [professor, setProfessor] = useState("");
-  const [course, setCourse] = useState("");
-  const [institution, setInstitution] = useState("");
-  const [program, setProgram] = useState("");
+  const [title,        setTitle]        = useState("");
+  const [subtitle,     setSubtitle]     = useState("");
+  const [author,       setAuthor]       = useState("");
+  const [professor,    setProfessor]    = useState("");
+  const [course,       setCourse]       = useState("");
+  const [institution,  setInstitution]  = useState("");
+  const [program,      setProgram]      = useState("");
   const [documentType, setDocumentType] = useState("Documento Académico");
-  const [date, setDate] = useState(
+  const [date,         setDate]         = useState(
     new Date().toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })
   );
   const [references, setReferences] = useState<Reference[]>([]);
-  const [sections, setSections] = useState<Section[]>([{ id: uid(), title: "", content: "" }]);
-  const [template] = useState<Template>("academic");
-  const [loading, setLoading] = useState<"pdf" | "preview" | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [sections,   setSections]   = useState<Section[]>([defaultSection()]);
+  const [template]                  = useState<Template>("academic");
+  const [loading,    setLoading]    = useState<"pdf" | "preview" | null>(null);
+  const [error,      setError]      = useState<string | null>(null);
 
   // ─── Section handlers ────────────────────────────────────────────────────────
 
   function addSection() {
-    setSections((s) => [...s, { id: uid(), title: "", content: "" }]);
+    setSections((s) => [...s, defaultSection()]);
   }
 
   function removeSection(id: string) {
     setSections((s) => s.filter((sec) => sec.id !== id));
   }
 
-  function updateSection(id: string, field: "title" | "content", value: string) {
-    setSections((s) => s.map((sec) => (sec.id === id ? { ...sec, [field]: value } : sec)));
+  function updateSectionTitle(id: string, title: string) {
+    setSections((s) => s.map((sec) => (sec.id === id ? { ...sec, title } : sec)));
+  }
+
+  function updateSectionBlocks(id: string, blocks: ContentBlock[]) {
+    setSections((s) => s.map((sec) => (sec.id === id ? { ...sec, blocks } : sec)));
   }
 
   function moveSection(id: string, dir: -1 | 1) {
@@ -83,7 +93,10 @@ export default function Home() {
       documentType: documentType || undefined,
       date,
       template,
-      sections: sections.map(({ title, content }) => ({ title, content })),
+      sections: sections.map(({ title, blocks }) => ({
+        title,
+        content: blocks.map(renderBlock).filter(Boolean).join("\n"),
+      })),
       references: references.length > 0 ? references.map(renderAPA) : undefined,
     };
   }
@@ -227,7 +240,8 @@ export default function Home() {
           sections={sections}
           onAdd={addSection}
           onRemove={removeSection}
-          onUpdate={updateSection}
+          onTitleChange={updateSectionTitle}
+          onBlocksChange={updateSectionBlocks}
           onMove={moveSection}
         />
 
@@ -240,9 +254,9 @@ export default function Home() {
 
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-3 flex items-center justify-between z-10">
           <span className="text-xs text-slate-400">
-            {sections.length} sección{sections.length !== 1 ? "es" : ""}{" "}
-            {references.length > 0 && `· ${references.length} referencia${references.length !== 1 ? "s" : ""}`}
-            {" "}· Template: <span className="font-medium text-slate-600 capitalize">{template}</span>
+            {sections.length} sección{sections.length !== 1 ? "es" : ""}
+            {references.length > 0 && ` · ${references.length} referencia${references.length !== 1 ? "s" : ""}`}
+            {" · "}Template: <span className="font-medium text-slate-600 capitalize">{template}</span>
           </span>
           <div className="flex items-center gap-2">
             <button
