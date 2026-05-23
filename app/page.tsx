@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Section, Template } from "./types/document";
 import type { Reference } from "./types/reference";
 import { uid } from "./lib/uid";
-import { formatAPA } from "./lib/apa/formatAPA";
+import { renderAPA } from "./lib/renderers/renderAPA";
 import { DocumentInfo } from "./components/DocumentInfo";
 import { CourseDetails } from "./components/CourseDetails";
 import { SectionsEditor } from "./components/SectionsEditor";
@@ -84,7 +84,7 @@ export default function Home() {
       date,
       template,
       sections: sections.map(({ title, content }) => ({ title, content })),
-      references: references.length > 0 ? references.map(formatAPA) : undefined,
+      references: references.length > 0 ? references.map(renderAPA) : undefined,
     };
   }
 

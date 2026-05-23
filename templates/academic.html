@@ -389,6 +389,7 @@
     .reference-entry a {
       color: #2563eb;
       text-decoration: none;
+      word-break: break-all;
     }
 
     
@@ -457,7 +458,7 @@
   <div class="references">
     <h2>Referencias Bibliográficas</h2>
     {{#each references}}
-    <div class="reference-entry">{{this}}</div>
+    <div class="reference-entry">{{{this}}}</div>
     {{/each}}
   </div>
   {{/if}}
