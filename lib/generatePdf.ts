@@ -34,7 +34,10 @@ Handlebars.registerHelper("addOne", (index: number) => index + 1);
 const templateCache = new Map<string, HandlebarsTemplateDelegate>();
 
 function loadTemplate(name: string): HandlebarsTemplateDelegate {
-  if (templateCache.has(name)) return templateCache.get(name)!;
+  // Skip cache in development so template edits are picked up instantly
+  if (process.env.NODE_ENV !== "development" && templateCache.has(name)) {
+    return templateCache.get(name)!;
+  }
   const templatePath = path.join(process.cwd(), "templates", `${name}.html`);
   const source = fs.readFileSync(templatePath, "utf-8");
   const compiled = Handlebars.compile(source);
