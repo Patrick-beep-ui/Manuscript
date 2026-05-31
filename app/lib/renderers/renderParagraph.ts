@@ -3,6 +3,7 @@ import { parseInline } from "../parseInline";
 
 export function renderParagraph(block: ParagraphBlock): string {
   if (!block.text.trim()) return "";
+  if (isHtml(block.text)) return block.text;
   return block.text
     .split(/\n\n+/)
     .filter((p) => p.trim())
@@ -11,4 +12,8 @@ export function renderParagraph(block: ParagraphBlock): string {
       return `<p>${lines.join("<br>")}</p>`;
     })
     .join("\n");
+}
+
+function isHtml(text: string): boolean {
+  return /<[a-z][\s\S]*>/i.test(text);
 }

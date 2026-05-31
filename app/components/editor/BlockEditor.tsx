@@ -2,13 +2,21 @@
 
 import { useState } from "react";
 import type { ContentBlock, BlockType } from "../../types/blocks";
-import { uid } from "../../lib/uid";
+import { createDefaultBlock } from "../../lib/blockDefaults";
 import { BlockTypeMenu } from "./BlockTypeMenu";
 import { ParagraphBlockEditor } from "./blocks/ParagraphBlockEditor";
 import { HeadingBlockEditor }   from "./blocks/HeadingBlockEditor";
 import { ListBlockEditor }      from "./blocks/ListBlockEditor";
 import { TableBlockEditor }     from "./blocks/TableBlockEditor";
 import { QuoteBlockEditor }     from "./blocks/QuoteBlockEditor";
+
+const QUICK_LABEL: Record<BlockType, string> = {
+  paragraph: "párrafo",
+  heading:   "subtítulo",
+  list:      "lista",
+  table:     "tabla",
+  quote:     "cita",
+};
 
 const BLOCK_META: Record<BlockType, { label: string; color: string }> = {
   paragraph: { label: "Párrafo",   color: "bg-slate-100 text-slate-500"   },
@@ -27,13 +35,13 @@ export function BlockEditor({ blocks, onChange }: BlockEditorProps) {
   const [showMenu, setShowMenu] = useState(false);
 
   function addBlock(type: BlockType) {
-    onChange([...blocks, createDefault(type)]);
+    onChange([...blocks, createDefaultBlock(type)]);
     setShowMenu(false);
   }
 
   function removeBlock(index: number) {
     const updated = blocks.filter((_, i) => i !== index);
-    onChange(updated.length > 0 ? updated : [createDefault("paragraph")]);
+    onChange(updated.length > 0 ? updated : [createDefaultBlock("paragraph")]);
   }
 
   function updateBlock(index: number, updated: ContentBlock) {
@@ -116,27 +124,29 @@ export function BlockEditor({ blocks, onChange }: BlockEditorProps) {
       {showMenu ? (
         <BlockTypeMenu onSelect={addBlock} onCancel={() => setShowMenu(false)} />
       ) : (
-        <button
-          onClick={() => setShowMenu(true)}
-          className="w-full text-xs font-medium text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 rounded-lg py-2 transition-colors flex items-center justify-center gap-1.5"
-        >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-          </svg>
-          Añadir bloque
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => addBlock(blocks[blocks.length - 1].type)}
+            className="flex-1 text-xs font-medium text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-dashed border-blue-300 hover:border-blue-400 rounded-lg py-2 transition-colors flex items-center justify-center gap-1.5"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Añadir otro {QUICK_LABEL[blocks[blocks.length - 1].type]}
+          </button>
+          <button
+            onClick={() => setShowMenu(true)}
+            className="text-xs font-medium text-slate-400 hover:text-blue-600 border border-dashed border-slate-200 hover:border-blue-300 rounded-lg py-2 px-3 transition-colors flex items-center gap-1.5"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Añadir bloque
+          </button>
+        </div>
       )}
     </div>
   );
 }
 
-function createDefault(type: BlockType): ContentBlock {
-  const id = uid();
-  switch (type) {
-    case "paragraph": return { id, type, text: "" };
-    case "heading":   return { id, type, text: "" };
-    case "list":      return { id, type, items: [""], ordered: false };
-    case "table":     return { id, type, headers: ["Columna 1", "Columna 2"], rows: [["", ""]] };
-    case "quote":     return { id, type, text: "" };
-  }
-}
+
