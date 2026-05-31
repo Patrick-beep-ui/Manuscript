@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+
+const STORE_KEY = "structura-document";
 import type { Section, Template } from "./types/document";
 import type { ContentBlock, BlockType } from "./types/blocks";
 import type { Reference } from "./types/reference";
@@ -35,6 +37,45 @@ export default function Home() {
   const [template]                  = useState<Template>("academic");
   const [loading,    setLoading]    = useState<"pdf" | "preview" | null>(null);
   const [error,      setError]      = useState<string | null>(null);
+
+  // ─── Persistence ─────────────────────────────────────────────────────────────
+
+  const hydratedRef = useRef(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORE_KEY);
+      if (saved) {
+        const d = JSON.parse(saved);
+        setTitle(d.title ?? "");
+        setSubtitle(d.subtitle ?? "");
+        setAuthor(d.author ?? "");
+        setProfessor(d.professor ?? "");
+        setCourse(d.course ?? "");
+        setInstitution(d.institution ?? "");
+        setProgram(d.program ?? "");
+        setDocumentType(d.documentType ?? "Documento Académico");
+        setDate(d.date ?? new Date().toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" }));
+        setSections(d.sections ?? [createSection("paragraph")]);
+        setReferences(d.references ?? []);
+      }
+    } catch (e) {
+      console.warn("Error restoring document", e);
+    }
+    hydratedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    const timer = setTimeout(() => {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        title, subtitle, author, professor, course,
+        institution, program, documentType, date,
+        sections, references, template,
+      }));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [title, subtitle, author, professor, course, institution, program, documentType, date, sections, references, template]);
 
   // ─── Section handlers ────────────────────────────────────────────────────────
 
@@ -78,6 +119,20 @@ export default function Home() {
 
   function updateReference(ref: Reference) {
     setReferences((r) => r.map((existing) => (existing.id === ref.id ? ref : existing)));
+  }
+
+  // ─── New document ────────────────────────────────────────────────────────────
+
+  function handleNewDocument() {
+    if (!confirm("¿Estás seguro? Se borrará el documento actual.")) return;
+    localStorage.removeItem(STORE_KEY);
+    setTitle(""); setSubtitle(""); setAuthor(""); setProfessor("");
+    setCourse(""); setInstitution(""); setProgram("");
+    setDocumentType("Documento Académico");
+    setDate(new Date().toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" }));
+    setSections([createSection("paragraph")]);
+    setReferences([]);
+    setError(null);
   }
 
   // ─── Payload ─────────────────────────────────────────────────────────────────
@@ -168,6 +223,9 @@ export default function Home() {
           </div>
           <span className="text-white font-semibold tracking-tight text-base">Structura</span>
           <span className="text-slate-500 text-xs ml-1">Generador de documentos</span>
+          <button onClick={handleNewDocument} className="text-xs text-slate-600 hover:text-slate-300 ml-3 transition-colors">
+            Nuevo
+          </button>
         </div>
         <div className="flex items-center gap-2">
           <button
