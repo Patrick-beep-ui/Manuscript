@@ -7,5 +7,12 @@ export function renderQuote(block: QuoteBlock): string {
   const author = block.author?.trim()
     ? `\n  <div class="quote-author">— ${escapeHtml(block.author.trim())}</div>`
     : "";
-  return `<div class="quote-box">\n  <p>${parseInline(block.text.trim())}</p>${author}\n</div>`;
+  const content = isHtml(block.text)
+    ? block.text
+    : parseInline(block.text.trim());
+  return `<div class="quote-box">\n  <p>${content}</p>${author}\n</div>`;
+}
+
+function isHtml(text: string): boolean {
+  return /<[a-z][\s\S]*>/i.test(text);
 }

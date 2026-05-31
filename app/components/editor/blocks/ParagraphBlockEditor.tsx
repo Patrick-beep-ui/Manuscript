@@ -1,4 +1,7 @@
+"use client";
+
 import type { ParagraphBlock } from "../../../types/blocks";
+import { RichTextEditor } from "../RichTextEditor";
 
 interface Props {
   block: ParagraphBlock;
@@ -7,12 +10,10 @@ interface Props {
 
 export function ParagraphBlockEditor({ block, onChange }: Props) {
   return (
-    <textarea
-      value={block.text}
-      onChange={(e) => onChange({ ...block, text: e.target.value })}
-      placeholder="Escribe el párrafo… Usa **negrita** y *cursiva*. Doble salto = nuevo párrafo."
-      rows={3}
-      className="w-full text-sm text-slate-700 bg-transparent border-0 outline-none resize-none placeholder:text-slate-300 leading-relaxed"
+    <RichTextEditor
+      content={block.text}
+      onChange={(html) => onChange({ ...block, text: html })}
+      placeholder="Escribe el párrafo… Usa los botones B/I para formato."
     />
   );
 }

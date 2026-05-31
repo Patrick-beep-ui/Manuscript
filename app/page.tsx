@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import type { Section, Template } from "./types/document";
-import type { ContentBlock } from "./types/blocks";
+import type { ContentBlock, BlockType } from "./types/blocks";
 import type { Reference } from "./types/reference";
 import { uid } from "./lib/uid";
+import { createDefaultBlock } from "./lib/blockDefaults";
 import { renderBlock } from "./lib/renderers/renderBlock";
 import { renderAPA }   from "./lib/renderers/renderAPA";
 import { DocumentInfo }  from "./components/DocumentInfo";
@@ -13,8 +14,8 @@ import { SectionsEditor } from "./components/SectionsEditor";
 import { References }    from "./components/references/References";
 import { Spinner }       from "./components/shared/Spinner";
 
-function defaultSection(): Section {
-  return { id: uid(), title: "", blocks: [{ id: uid(), type: "paragraph", text: "" }] };
+function createSection(type: BlockType): Section {
+  return { id: uid(), title: "", blocks: [createDefaultBlock(type)] };
 }
 
 export default function Home() {
@@ -30,15 +31,15 @@ export default function Home() {
     new Date().toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })
   );
   const [references, setReferences] = useState<Reference[]>([]);
-  const [sections,   setSections]   = useState<Section[]>([defaultSection()]);
+  const [sections,   setSections]   = useState<Section[]>([createSection("paragraph")]);
   const [template]                  = useState<Template>("academic");
   const [loading,    setLoading]    = useState<"pdf" | "preview" | null>(null);
   const [error,      setError]      = useState<string | null>(null);
 
   // ─── Section handlers ────────────────────────────────────────────────────────
 
-  function addSection() {
-    setSections((s) => [...s, defaultSection()]);
+  function addSection(type: BlockType) {
+    setSections((s) => [...s, createSection(type)]);
   }
 
   function removeSection(id: string) {
