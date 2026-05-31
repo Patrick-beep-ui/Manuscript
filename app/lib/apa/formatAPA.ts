@@ -8,5 +8,7 @@ export function formatAPA(ref: Reference): string {
     case "book":    return formatBook(ref);
     case "journal": return formatJournal(ref);
     case "website": return formatWebsite(ref);
+    case "report":  return "";
+    case "custom":  return "";
   }
 }

@@ -6,6 +6,8 @@ import { ReferencePreview } from "./ReferencePreview";
 import { BookReferenceForm } from "./forms/BookReferenceForm";
 import { JournalReferenceForm } from "./forms/JournalReferenceForm";
 import { WebsiteReferenceForm } from "./forms/WebsiteReferenceForm";
+import { ReportReferenceForm } from "./forms/ReportReferenceForm";
+import { CustomReferenceForm } from "./forms/CustomReferenceForm";
 
 interface ReferenceItemProps {
   reference: Reference;
@@ -21,18 +23,20 @@ export function ReferenceItem({ reference, onRemove, onUpdate }: ReferenceItemPr
     setEditing(false);
   }
 
+  const form = (() => {
+    switch (reference.type) {
+      case "book":    return <BookReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />;
+      case "journal": return <JournalReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />;
+      case "website": return <WebsiteReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />;
+      case "report":  return <ReportReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />;
+      case "custom":  return <CustomReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />;
+    }
+  })();
+
   if (editing) {
     return (
       <div className="p-4 bg-slate-50 border-b border-slate-100 last:border-0">
-        {reference.type === "book" && (
-          <BookReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />
-        )}
-        {reference.type === "journal" && (
-          <JournalReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />
-        )}
-        {reference.type === "website" && (
-          <WebsiteReferenceForm initial={reference} onSave={handleSave} onCancel={() => setEditing(false)} />
-        )}
+        {form}
       </div>
     );
   }

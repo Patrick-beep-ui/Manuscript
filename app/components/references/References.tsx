@@ -8,6 +8,8 @@ import { ReferenceTypeSelector } from "./ReferenceTypeSelector";
 import { BookReferenceForm } from "./forms/BookReferenceForm";
 import { JournalReferenceForm } from "./forms/JournalReferenceForm";
 import { WebsiteReferenceForm } from "./forms/WebsiteReferenceForm";
+import { ReportReferenceForm } from "./forms/ReportReferenceForm";
+import { CustomReferenceForm } from "./forms/CustomReferenceForm";
 
 interface ReferencesProps {
   references: Reference[];
@@ -61,15 +63,29 @@ export function References({ references, onAdd, onRemove, onUpdate }: References
 
       {step === "journal" && (
         <div className="border border-slate-200 rounded-lg p-4">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3"> Artículo de revista</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Artículo de revista</p>
           <JournalReferenceForm onSave={handleAdd} onCancel={() => setStep("selecting")} />
         </div>
       )}
 
       {step === "website" && (
         <div className="border border-slate-200 rounded-lg p-4">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3"> Sitio web</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Sitio web</p>
           <WebsiteReferenceForm onSave={handleAdd} onCancel={() => setStep("selecting")} />
+        </div>
+      )}
+
+      {step === "report" && (
+        <div className="border border-slate-200 rounded-lg p-4">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Informe institucional</p>
+          <ReportReferenceForm onSave={handleAdd} onCancel={() => setStep("selecting")} />
+        </div>
+      )}
+
+      {step === "custom" && (
+        <div className="border border-slate-200 rounded-lg p-4">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Referencia personalizada</p>
+          <CustomReferenceForm onSave={handleAdd} onCancel={() => setStep("selecting")} />
         </div>
       )}
     </FormCard>

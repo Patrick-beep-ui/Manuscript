@@ -5,6 +5,8 @@ const TYPE_LABEL: Record<ReferenceType, string> = {
   book:    "📖 Libro",
   journal: "📰 Artículo",
   website: "🌐 Web",
+  report:  "📄 Informe",
+  custom:  "✏️ Personalizada",
 };
 
 export function ReferencePreview({ reference }: { reference: Reference }) {
