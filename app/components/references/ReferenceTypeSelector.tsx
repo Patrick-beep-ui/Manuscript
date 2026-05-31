@@ -4,6 +4,8 @@ const TYPES: { type: ReferenceType; icon: string; label: string; desc: string }[
   { type: "book",    icon: "📖", label: "Libro",    desc: "Libro o capítulo" },
   { type: "journal", icon: "📰", label: "Artículo", desc: "Revista científica" },
   { type: "website", icon: "🌐", label: "Web",       desc: "Página o recurso en línea" },
+  { type: "report",  icon: "📄", label: "Informe",   desc: "Informe institucional" },
+  { type: "custom",  icon: "✏️",  label: "Personalizada", desc: "Escribe la referencia completa" },
 ];
 
 interface ReferenceTypeSelectorProps {
@@ -17,7 +19,7 @@ export function ReferenceTypeSelector({ onSelect, onCancel }: ReferenceTypeSelec
       <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
         Tipo de referencia
       </p>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
         {TYPES.map(({ type, icon, label, desc }) => (
           <button
             key={type}
