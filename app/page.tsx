@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 
 const STORE_KEY = "structura-document";
+const PROFILE_KEY = "structura-author-profile";
 import type { Section, Template } from "./types/document";
 import type { ContentBlock, BlockType } from "./types/blocks";
 import type { Reference } from "./types/reference";
@@ -59,6 +60,19 @@ export default function Home() {
         setSections(d.sections ?? [createSection("paragraph")]);
         setReferences(d.references ?? []);
       }
+      try {
+        const profile = localStorage.getItem(PROFILE_KEY);
+        if (profile) {
+          const p = JSON.parse(profile);
+          setAuthor(p.author ?? "");
+          setProfessor(p.professor ?? "");
+          setCourse(p.course ?? "");
+          setInstitution(p.institution ?? "");
+          setProgram(p.program ?? "");
+        }
+      } catch (e) {
+        console.warn("Error restoring author profile", e);
+      }
     } catch (e) {
       console.warn("Error restoring document", e);
     }
@@ -69,13 +83,22 @@ export default function Home() {
     if (!hydratedRef.current) return;
     const timer = setTimeout(() => {
       localStorage.setItem(STORE_KEY, JSON.stringify({
-        title, subtitle, author, professor, course,
-        institution, program, documentType, date,
+        title, subtitle, documentType, date,
         sections, references, template,
       }));
     }, 500);
     return () => clearTimeout(timer);
-  }, [title, subtitle, author, professor, course, institution, program, documentType, date, sections, references, template]);
+  }, [title, subtitle, documentType, date, sections, references, template]);
+
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    const timer = setTimeout(() => {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify({
+        author, professor, course, institution, program,
+      }));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [author, professor, course, institution, program]);
 
   // ─── Section handlers ────────────────────────────────────────────────────────
 
@@ -126,8 +149,7 @@ export default function Home() {
   function handleNewDocument() {
     if (!confirm("¿Estás seguro? Se borrará el documento actual.")) return;
     localStorage.removeItem(STORE_KEY);
-    setTitle(""); setSubtitle(""); setAuthor(""); setProfessor("");
-    setCourse(""); setInstitution(""); setProgram("");
+    setTitle(""); setSubtitle("");
     setDocumentType("Documento Académico");
     setDate(new Date().toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" }));
     setSections([createSection("paragraph")]);
