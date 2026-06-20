@@ -1,6 +1,6 @@
-# Structura — Generador de Documentos Académicos
+# Manuscript — Generador de Documentos Académicos
 
-**Structura** es una aplicación web para redactar y generar documentos académicos y profesionales en formato PDF. Proporciona un editor estructurado por secciones, bloques de contenido y referencias bibliográficas en formato APA, y renderiza un PDF de alta calidad mediante Puppeteer.
+**Manuscript** es una aplicación web para redactar y generar documentos académicos y profesionales en formato PDF. Proporciona un editor estructurado por secciones, bloques de contenido y referencias bibliográficas en formato APA, y renderiza un PDF de alta calidad mediante Puppeteer.
 
 ## Funcionalidades
 

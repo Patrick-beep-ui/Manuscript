@@ -243,7 +243,7 @@ export default function Home() {
               <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
             </svg>
           </div>
-          <span className="text-white font-semibold tracking-tight text-base">Structura</span>
+          <span className="text-white font-semibold tracking-tight text-base">Manuscript</span>
           <span className="text-slate-500 text-xs ml-1">Generador de documentos</span>
           <button onClick={handleNewDocument} className="text-xs text-slate-600 hover:text-slate-300 ml-3 transition-colors">
             Nuevo
