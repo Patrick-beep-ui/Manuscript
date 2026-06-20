@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Structura | Generador de Documentos",
+  title: "Manuscript  | Generador de Documentos",
   description: "Genera documentos academicos y profesionales en PDF con diseno premium.",
 };
 
