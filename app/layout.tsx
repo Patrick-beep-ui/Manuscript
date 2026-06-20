@@ -13,8 +13,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Manuscript  | Generador de Documentos",
-  description: "Genera documentos academicos y profesionales en PDF con diseno premium.",
+  title: "Manuscript | Generador de Documentos",
+  description: "Genera documentos académicos y profesionales en PDF con diseño premium.",
+  openGraph: {
+    title: "Manuscript | Generador de Documentos",
+    description: "Genera documentos académicos y profesionales en PDF con diseño premium.",
+    url: "https://manuscriptapp.vercel.app/",
+    siteName: "Manuscript",
+    images: [
+      {
+        url: "/images/manuscript_logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Manuscript - Generador de Documentos",
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
