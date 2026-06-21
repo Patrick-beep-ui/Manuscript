@@ -72,19 +72,30 @@ export function generateHtml(data: DocumentData): string {
 export async function generatePdf(data: DocumentData): Promise<Buffer> {
   const html = generateHtml(data);
 
-  // Lazy-import so puppeteer only loads server-side
-  const puppeteer = await import("puppeteer");
+  let browser;
+  const isDev = process.env.NODE_ENV === "development";
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--font-render-hinting=none",
-    ],
-  });
+  if (isDev) {
+    const puppeteer = await import("puppeteer");
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--font-render-hinting=none",
+      ],
+    });
+  } else {
+    const chromium = (await import("@sparticuz/chromium")).default;
+    const puppeteer = await import("puppeteer-core");
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    });
+  }
 
   try {
     const page = await browser.newPage();

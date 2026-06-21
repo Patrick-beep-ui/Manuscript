@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Manuscript | Generador de Documentos",
   description: "Genera documentos académicos y profesionales en PDF con diseño premium.",
+  icons: {
+    icon: "/images/manuscript_logo-icon.png",
+  },
   openGraph: {
     title: "Manuscript | Generador de Documentos",
     description: "Genera documentos académicos y profesionales en PDF con diseño premium.",
