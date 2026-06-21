@@ -236,16 +236,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="sticky top-0 z-20 bg-slate-900 border-b border-slate-800 px-6 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-20 bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-7 h-7 rounded-md bg-blue-500 flex items-center justify-center">
-            <svg viewBox="0 0 20 20" fill="white" className="w-4 h-4">
-              <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
-            </svg>
-          </div>
-          <span className="text-white font-semibold tracking-tight text-base">Manuscript</span>
-          <span className="text-slate-500 text-xs ml-1">Generador de documentos</span>
-          <button onClick={handleNewDocument} className="text-xs text-slate-600 hover:text-slate-300 ml-3 transition-colors">
+          <img src="/images/manuscript_logo.png" alt="Manuscript" className="h-12 w-auto" />
+          <button onClick={handleNewDocument} className="px-5 py-2 rounded-lg bg-[#132033] text-white font-medium text-sm hover:bg-[#1a2d45] transition-colors">
             Nuevo
           </button>
         </div>
@@ -253,7 +247,7 @@ export default function Home() {
           <button
             onClick={handlePreview}
             disabled={!!loading}
-            className="px-3 py-1.5 text-sm rounded-md border border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white transition-colors disabled:opacity-40 flex items-center gap-1.5"
+            className="px-3 py-1.5 text-sm rounded-md border border-[#132033] text-[#132033] hover:bg-[#132033] hover:text-white transition-colors disabled:opacity-40 flex items-center gap-1.5"
           >
             {loading === "preview" ? (
               <Spinner />
