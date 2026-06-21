@@ -88,13 +88,34 @@ export async function generatePdf(data: DocumentData): Promise<Buffer> {
       ],
     });
   } else {
-    const chromium = (await import("@sparticuz/chromium")).default;
+    const chromePaths = [
+      "/usr/bin/google-chrome",
+      "/usr/bin/chromium-browser",
+      "/usr/bin/google-chrome-stable",
+      "/opt/google/chrome/chrome",
+    ];
+
+    let executablePath: string | undefined;
+    for (const p of chromePaths) {
+      if (fs.existsSync(p)) { executablePath = p; break; }
+    }
+
     const puppeteer = await import("puppeteer-core");
-    browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: true,
-    });
+
+    if (executablePath) {
+      browser = await puppeteer.launch({
+        executablePath,
+        args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+        headless: true,
+      });
+    } else {
+      const chromium = (await import("@sparticuz/chromium")).default;
+      browser = await puppeteer.launch({
+        args: chromium.args,
+        executablePath: await chromium.executablePath(),
+        headless: true,
+      });
+    }
   }
 
   try {

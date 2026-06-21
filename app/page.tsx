@@ -235,11 +235,19 @@ export default function Home() {
   // ─── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="sticky top-0 z-20 bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img src="/images/manuscript_logo.png" alt="Manuscript" className="h-12 w-auto" />
-          <button onClick={handleNewDocument} className="px-5 py-2 rounded-lg bg-[#132033] text-white font-medium text-sm hover:bg-[#1a2d45] transition-colors">
+    <div className="min-h-screen font-sans" style={{ background: "var(--page-bg)" }}>
+      <header className="sticky top-0 z-20 px-6 py-3 flex items-center justify-between" style={{ background: "var(--brand-navy)" }}>
+        <div className="flex items-center gap-4">
+          <div className="bg-white rounded-lg px-2 py-1">
+            <img src="/images/manuscript_logo.png" alt="Manuscript" className="h-8 w-auto" />
+          </div>
+          <button
+            onClick={handleNewDocument}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-white/80 border border-white/20 hover:bg-white/10 hover:text-white transition-colors"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
             Nuevo
           </button>
         </div>
@@ -247,7 +255,7 @@ export default function Home() {
           <button
             onClick={handlePreview}
             disabled={!!loading}
-            className="px-3 py-1.5 text-sm rounded-md border border-[#132033] text-[#132033] hover:bg-[#132033] hover:text-white transition-colors disabled:opacity-40 flex items-center gap-1.5"
+            className="px-3 py-1.5 text-sm rounded-lg border border-white/25 text-white/75 hover:bg-white/10 hover:text-white transition-colors disabled:opacity-40 flex items-center gap-1.5"
           >
             {loading === "preview" ? (
               <Spinner />
@@ -257,12 +265,13 @@ export default function Home() {
                 <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
               </svg>
             )}
-            Vista previa HTML
+            Vista previa
           </button>
           <button
             onClick={handleGenerate}
             disabled={!!loading}
-            className="px-4 py-1.5 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-500 transition-colors disabled:opacity-40 font-medium flex items-center gap-1.5"
+            className="px-4 py-1.5 text-sm rounded-lg font-semibold text-white transition-colors disabled:opacity-40 flex items-center gap-1.5 shadow-sm"
+            style={{ background: "var(--brand-gold)" }}
           >
             {loading === "pdf" ? (
               <Spinner />
@@ -327,17 +336,17 @@ export default function Home() {
           onUpdate={updateReference}
         />
 
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-3 flex items-center justify-between z-10">
-          <span className="text-xs text-slate-400">
+        <div className="fixed bottom-0 left-0 right-0 px-6 py-3 flex items-center justify-between z-10" style={{ background: "var(--brand-navy)" }}>
+          <span className="text-xs text-white/50">
             {sections.length} sección{sections.length !== 1 ? "es" : ""}
             {references.length > 0 && ` · ${references.length} referencia${references.length !== 1 ? "s" : ""}`}
-            {" · "}Template: <span className="font-medium text-slate-600 capitalize">{template}</span>
+            {" · "}Template: <span className="font-medium text-white/70 capitalize">{template}</span>
           </span>
           <div className="flex items-center gap-2">
             <button
               onClick={handlePreview}
               disabled={!!loading}
-              className="px-4 py-2 text-sm rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 flex items-center gap-2"
+              className="px-4 py-2 text-sm rounded-lg border border-white/25 text-white/75 hover:bg-white/10 hover:text-white transition-colors disabled:opacity-40 flex items-center gap-2"
             >
               {loading === "preview" ? <Spinner /> : null}
               Vista previa
@@ -345,7 +354,8 @@ export default function Home() {
             <button
               onClick={handleGenerate}
               disabled={!!loading}
-              className="px-5 py-2 text-sm rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-500 shadow-sm transition-colors disabled:opacity-40 flex items-center gap-2"
+              className="px-5 py-2 text-sm rounded-lg font-semibold text-white shadow-sm transition-colors disabled:opacity-40 flex items-center gap-2"
+              style={{ background: "var(--brand-gold)" }}
             >
               {loading === "pdf" ? <Spinner /> : null}
               {loading === "pdf" ? "Generando PDF…" : "⬇ Generar PDF"}
