@@ -20,6 +20,14 @@ export function ListBlockEditor({ block, onChange }: Props) {
       onChange({ ...block, items: newItems });
       setTimeout(() => inputRefs.current[index + 1]?.focus(), 0);
     }
+
+    if (e.key === "Backspace" && block.items[index] === "" && block.items.length > 1) {
+      e.preventDefault();
+      const newItems = block.items.filter((_, i) => i !== index);
+      onChange({ ...block, items: newItems });
+      const prevIndex = Math.min(index, newItems.length - 1);
+      setTimeout(() => inputRefs.current[prevIndex]?.focus(), 0);
+    }
   }
 
   function updateItem(index: number, value: string) {
