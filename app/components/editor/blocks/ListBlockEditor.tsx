@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { ListBlock } from "../../../types/blocks";
 
 interface Props {
@@ -6,6 +7,21 @@ interface Props {
 }
 
 export function ListBlockEditor({ block, onChange }: Props) {
+  const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>, index: number) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newItems = [
+        ...block.items.slice(0, index + 1),
+        "",
+        ...block.items.slice(index + 1),
+      ];
+      onChange({ ...block, items: newItems });
+      setTimeout(() => inputRefs.current[index + 1]?.focus(), 0);
+    }
+  }
+
   function updateItem(index: number, value: string) {
     const items = block.items.map((item, i) => (i === index ? value : item));
     onChange({ ...block, items });
@@ -35,8 +51,10 @@ export function ListBlockEditor({ block, onChange }: Props) {
             {block.ordered ? `${idx + 1}.` : "•"}
           </span>
           <input
+            ref={(el) => { inputRefs.current[idx] = el; }}
             value={item}
             onChange={(e) => updateItem(idx, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e, idx)}
             placeholder="Elemento…"
             className="flex-1 text-sm text-slate-700 bg-transparent border-0 outline-none placeholder:text-slate-300"
           />
