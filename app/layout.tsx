@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Manuscript | Generador de Documentos",
   description: "Genera documentos académicos y profesionales en PDF con diseño premium.",
   icons: {
-    icon: "/images/manuscript_logo-icon.png",
+    icon: "/images/manuscript_logo.png",
   },
   openGraph: {
     title: "Manuscript | Generador de Documentos",
